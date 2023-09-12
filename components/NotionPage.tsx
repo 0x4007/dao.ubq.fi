@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 
 import cs from 'classnames'
 import { PageBlock } from 'notion-types'
-import { formatDate, getBlockTitle, getPageProperty, parsePageId } from 'notion-utils'
+import { formatDate, getBlockTitle, getPageProperty } from 'notion-utils'
 import BodyClassName from 'react-body-classname'
 import { NotionRenderer } from 'react-notion-x'
 import TweetEmbed from 'react-tweet-embed'
@@ -20,9 +20,11 @@ import { searchNotion } from '@/lib/search-notion'
 import { useDarkMode } from '@/lib/use-dark-mode'
 
 import { Footer } from './Footer'
+import { GitHubShareButton } from './GitHubShareButton'
 import { Loading } from './Loading'
 import { NotionPageHeader } from './NotionPageHeader'
 import { Page404 } from './Page404'
+import { PageAside } from './PageAside'
 import { PageHead } from './PageHead'
 import styles from './styles.module.css'
 
@@ -33,7 +35,7 @@ import styles from './styles.module.css'
 const Code = dynamic(() =>
   import('react-notion-x/build/third-party/code').then(async (m) => {
     // add / remove any prism syntaxes here
-    await Promise.allSettled([
+    await Promise.all([
       import('prismjs/components/prism-markup-templating.js'),
       import('prismjs/components/prism-markup.js'),
       import('prismjs/components/prism-bash.js'),
@@ -183,13 +185,20 @@ export const NotionPage: React.FC<types.PageProps> = ({
   const keys = Object.keys(recordMap?.block || {})
   const block = recordMap?.block?.[keys[0]]?.value
 
-  const isRootPage =
-    parsePageId(block?.id) === parsePageId(site?.rootNotionPageId)
+  // const isRootPage =
+  //   parsePageId(block?.id) === parsePageId(site?.rootNotionPageId)
   const isBlogPost =
     block?.type === 'page' && block?.parent_table === 'collection'
 
   const showTableOfContents = !!isBlogPost
   const minTableOfContentsItems = 3
+
+  const pageAside = React.useMemo(
+    () => (
+      <PageAside block={block} recordMap={recordMap} isBlogPost={isBlogPost} />
+    ),
+    [block, recordMap, isBlogPost]
+  )
 
   const footer = React.useMemo(() => <Footer />, [])
 
@@ -233,37 +242,6 @@ export const NotionPage: React.FC<types.PageProps> = ({
     getPageProperty<string>('Description', block, recordMap) ||
     config.description
 
-  // prepare background video for home page
-  const heroVideo =
-    'https://storageapi.fleek.one/2e62e11d-d4be-4c6f-a2bb-b159c83a0d95-bucket/ubq.fi/hero.mp4'
-
-  let pageCover
-  if (isRootPage) {
-    // HERO VIDEO
-    pageCover = (
-      <>
-        <div className='notion-page-cover-background'></div>
-        <video
-          className='notion-page-cover'
-          autoPlay
-          controls={false}
-          loop
-          muted
-          playsInline
-        >
-          <source src={heroVideo} type='video/mp4' />
-        </video>
-      </>
-    )
-  } else {
-    // NO HERO VIDEO
-    pageCover = (
-      <>
-        <div className='notion-page-cover-background'></div>
-      </>
-    )
-  }
-
   return (
     <>
       <PageHead
@@ -299,9 +277,11 @@ export const NotionPage: React.FC<types.PageProps> = ({
         mapPageUrl={siteMapPageUrl}
         mapImageUrl={mapImageUrl}
         searchNotion={config.isSearchEnabled ? searchNotion : null}
-        pageCover={pageCover}
+        pageAside={pageAside}
         footer={footer}
       />
+
+      <GitHubShareButton />
     </>
   )
 }

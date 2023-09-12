@@ -23,10 +23,6 @@
     'Apple Color Emoji', Arial, sans-serif, 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
-.hidden {
-  visibility: hidden;
-}
-
 .loadingIcon {
   animation: spinner 0.6s linear infinite;
   display: block;
@@ -90,23 +86,11 @@
 }
 
 .toggleDarkMode:hover {
-  color: #808080;
-}
-
-.discord:hover {
-  color: #808080;
-}
-
-.telegram:hover {
-  color: #808080;
+  color: #2795e9;
 }
 
 .twitter:hover {
-  color: #808080;
-}
-
-.zhihu:hover {
-  color: #0066ff;
+  color: #2795e9;
 }
 
 .mastodon:hover {
@@ -118,7 +102,7 @@
 }
 
 .github:hover {
-  color: #808080;
+  color: #c9510c;
 }
 
 .youtube:hover {
@@ -126,7 +110,7 @@
 }
 
 .linkedin:hover {
-  color: #808080;
+  color: #0077b5;
 }
 
 .newsletter:hover {
@@ -230,36 +214,6 @@
   }
 }
 
-/* Page 404 styles */
-.page404 {
-  display: flex;
-  align-items: center;
-}
-
-.page404 ul {
-  list-style: none;
-  padding: 0;
-}
-
-.page404 a {
-  text-decoration: none;
-  text-rendering: geometricPrecision;
-  font-weight: 600;
-  font-size: 12px;
-  display: inlineBlock;
-  max-height: 36px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  width: 100%;
-}
-
-.page404 > div:nth-child(1) {
-  padding: 16px;
-  text-align: left;
-}
-
-.page404 > div:nth-child(2) {
-  padding: 16px;
-  font-size: 2rem;
+.hidden {
+  visibility: hidden;
 }
