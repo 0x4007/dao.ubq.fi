@@ -38,6 +38,18 @@ export default async function OGImage(req: NextRequest) {
   const pageInfo: NotionPageInfo = await pageInfoRes.json()
   console.log(pageInfo)
 
+  if (pageInfo.image) {
+    // Fetch the image
+    const imageRes = await fetch(pageInfo.image)
+    const originalImageBuffer = await imageRes.arrayBuffer()
+
+    // Check size and replace with placeholder if necessary
+    if (originalImageBuffer.byteLength > 1 * 398 * 398) {
+      // Check if larger than 1MB minus the two font files.
+      pageInfo.image = 'https://ubq.fi/image/grid-1.png'
+    }
+  }
+
   const [interRegularFont, interBoldFont] = await Promise.all([
     interRegularFontP,
     interBoldFontP
