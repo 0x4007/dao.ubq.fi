@@ -16,6 +16,10 @@ import 'styles/global.css'
 // import 'prismjs/themes/prism-okaidia.css'
 // global style overrides for notion
 import 'styles/notion.css'
+// global style overrides for Ubiquity
+import 'styles/ubiquity.css'
+import 'styles/tables.css'
+import 'styles/proxima.css'
 // global style overrides for prism theme (optional)
 import 'styles/prism-theme.css'
 
