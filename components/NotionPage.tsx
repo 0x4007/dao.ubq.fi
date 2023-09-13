@@ -24,6 +24,7 @@ import { Loading } from './Loading'
 import { NotionPageHeader } from './NotionPageHeader'
 import { Page404 } from './Page404'
 import { PageHead } from './PageHead'
+import { Grid } from './Grid'
 import styles from './styles.module.css'
 
 // -----------------------------------------------------------------------------
@@ -191,6 +192,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
   const showTableOfContents = !!isBlogPost
   const minTableOfContentsItems = 3
 
+
   const footer = React.useMemo(() => <Footer />, [])
 
   if (router.isFallback) {
@@ -242,7 +244,10 @@ export const NotionPage: React.FC<types.PageProps> = ({
     // HERO VIDEO
     pageCover = (
       <>
-        <div className='notion-page-cover-background'></div>
+
+        <div className='notion-page-cover-background'>
+          <Grid />
+        </div>
         <video
           className='notion-page-cover'
           autoPlay
@@ -259,7 +264,10 @@ export const NotionPage: React.FC<types.PageProps> = ({
     // NO HERO VIDEO
     pageCover = (
       <>
-        <div className='notion-page-cover-background'></div>
+
+        <div className='notion-page-cover-background'>
+          <Grid />
+        </div>
       </>
     )
   }
@@ -277,6 +285,7 @@ export const NotionPage: React.FC<types.PageProps> = ({
 
       {isLiteMode && <BodyClassName className='notion-lite' />}
       {isDarkMode && <BodyClassName className='dark-mode' />}
+
 
       <NotionRenderer
         bodyClassName={cs(

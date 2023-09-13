@@ -34,12 +34,13 @@
 }
 
 .dark-mode .notion-app {
-  background: radial-gradient(#06061a, #000000);
+  /* background: radial-gradient(#06061a, #000000); */
 }
 .notion-callout {
   border: none;
 }
 .notion-app {
+  background: unset;
 }
 
 .notion-asset-wrapper-image {
@@ -836,10 +837,10 @@ footer {
 
 .notion-page-cover-background {
   position: fixed;
-  -webkit-mask-image: radial-gradient(#ffffff80, #ffffff00);
-  background-image: url(//ubq.fi/image/grid-1.png);
-  height: calc(100vh - calc(2 * var(--header)));
-  width: 100vw;
+  -webkit-mask-image: radial-gradient(#ffffff00,#ffffff40, #ffffffbf);
+  /* background-image: url(//ubq.fi/image/grid-1.png); */
+  /* height: calc(100vh - calc(2 * var(--header))); */
+  /* width: 100vw; */
   pointer-events: none;
 }
 
@@ -1152,9 +1153,23 @@ video.notion-page-cover {
   background-color: #ffffffbf;
 }
 
-.quickFindMenu .resultsPane .notion-page-icon{
+.quickFindMenu .resultsPane .notion-page-icon {
   background-color: transparent;
   background-position: center;
   font-size: 20px;
   line-height: 1;
+}
+/*
+#Grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+} */
+
+.notion-page-scroller > main,
+.notion-page-scroller > footer {
+  position: relative;
 }
