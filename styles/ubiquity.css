@@ -837,7 +837,7 @@ footer {
 
 .notion-page-cover-background {
   position: fixed;
-  -webkit-mask-image: radial-gradient(#ffffff00,#ffffff40, #ffffffbf);
+  -webkit-mask-image: radial-gradient(#ffffff00, #ffffff40, #ffffffbf);
   /* background-image: url(//ubq.fi/image/grid-1.png); */
   /* height: calc(100vh - calc(2 * var(--header))); */
   /* width: 100vw; */
@@ -1172,4 +1172,8 @@ video.notion-page-cover {
 .notion-page-scroller > main,
 .notion-page-scroller > footer {
   position: relative;
+}
+
+.light-mode #Grid > canvas {
+  filter: invert(1);
 }
