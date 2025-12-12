@@ -19,7 +19,8 @@ jobs:
       - name: Checkout target repo
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Use PAT if available for better permissions, otherwise GITHUB_TOKEN
+          token: ${{ secrets.PAT_REPO_SYNC_DOCS_TOKEN || secrets.GITHUB_TOKEN }}
           persist-credentials: false
 
       # REQUIRED step
@@ -30,7 +31,9 @@ jobs:
         with:
           target_sync_branch: ubiquity
           # REQUIRED 'target_repo_token' exactly like this!
-          target_repo_token: ${{ secrets.GITHUB_TOKEN }}
+          # Use PAT if available, fallback to GITHUB_TOKEN
+          target_repo_token: >-
+            ${{ secrets.PAT_REPO_SYNC_DOCS_TOKEN || secrets.GITHUB_TOKEN }}
           upstream_sync_branch: main
           upstream_sync_repo: transitive-bullshit/nextjs-notion-starter-kit
 
