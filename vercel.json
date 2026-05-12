@@ -1,12 +1,27 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next",
-      "config": {
-        "nodeVersion": "18.x"
-      }
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "nextjs",
+  "functions": {
+    "pages/index.tsx": {
+      "maxDuration": 60
+    },
+    "pages/[pageId].tsx": {
+      "maxDuration": 60
+    },
+    "pages/feed.tsx": {
+      "maxDuration": 60
+    },
+    "pages/sitemap.xml.tsx": {
+      "maxDuration": 60
+    },
+    "pages/api/*.ts": {
+      "maxDuration": 30
+    },
+    "pages/api/*.tsx": {
+      "maxDuration": 60
+    },
+    "pages/api/**/*.ts": {
+      "maxDuration": 30
     }
-  ]
+  }
 }

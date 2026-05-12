@@ -8,6 +8,15 @@ import { getCanonicalPageId } from './get-canonical-page-id'
 import { notion } from './notion-api'
 
 const uuid = !!includeNotionIdInUrls
+const defaultPageCrawlConcurrency = 1
+
+const getPageCrawlConcurrency = () => {
+  const concurrency = Number(process.env.NOTION_PAGE_CRAWL_CONCURRENCY)
+
+  return Number.isInteger(concurrency) && concurrency > 0
+    ? concurrency
+    : defaultPageCrawlConcurrency
+}
 
 export async function getSiteMap(): Promise<types.SiteMap> {
   const partialSiteMap = await getAllPages(
@@ -22,7 +31,8 @@ export async function getSiteMap(): Promise<types.SiteMap> {
 }
 
 const getAllPages = pMemoize(getAllPagesImpl, {
-  cacheKey: (...args) => JSON.stringify(args)
+  cacheKey: (...args) => JSON.stringify(args),
+  cache: false
 })
 
 const getPage = async (pageId: string, ...args) => {
@@ -37,14 +47,21 @@ async function getAllPagesImpl(
   const pageMap = await getAllPagesInSpace(
     rootNotionPageId,
     rootNotionSpaceId,
-    getPage
+    getPage,
+    { concurrency: getPageCrawlConcurrency() }
   )
 
   const canonicalPageMap = Object.keys(pageMap).reduce(
     (map, pageId: string) => {
       const recordMap = pageMap[pageId]
       if (!recordMap) {
-        throw new Error(`Error loading page "${pageId}"`)
+        if (pageId === rootNotionPageId) {
+          throw new Error(`Error loading root page "${pageId}"`)
+        }
+
+        console.warn(`Skipping page "${pageId}" because Notion did not load it`)
+
+        return map
       }
 
       const block = recordMap.block[pageId]?.value
