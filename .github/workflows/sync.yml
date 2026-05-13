@@ -6,6 +6,9 @@ on:
 
   workflow_dispatch:  # click the button on Github repo!
 
+permissions:
+  contents: write
+
 jobs:
   sync_latest_from_upstream:
     runs-on: ubuntu-latest
@@ -15,15 +18,16 @@ jobs:
     # REQUIRED step
     # Step 1: run a standard checkout action, provided by github
     - name: Checkout target repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
       with:
-        token: ${{ secrets.PAT_REPO_SYNC_DOCS_TOKEN }}
+        ref: ubiquity
+        persist-credentials: false
 
     # REQUIRED step
     # Step 2: run the sync action
     - name: Sync upstream changes
       id: sync
-      uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
+      uses: aormsby/Fork-Sync-With-Upstream-action@v3.4.3
       with:
         target_sync_branch: ubiquity
         # REQUIRED 'target_repo_token' exactly like this!
