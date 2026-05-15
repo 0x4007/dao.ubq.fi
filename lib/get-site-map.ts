@@ -31,8 +31,7 @@ export async function getSiteMap(): Promise<types.SiteMap> {
 }
 
 const getAllPages = pMemoize(getAllPagesImpl, {
-  cacheKey: (...args) => JSON.stringify(args),
-  cache: false
+  cacheKey: (...args) => JSON.stringify(args)
 })
 
 const getPage = async (pageId: string, ...args) => {
