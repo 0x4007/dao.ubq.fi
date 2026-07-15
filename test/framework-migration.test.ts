@@ -38,4 +38,5 @@ void test('Vercel installs with the pinned Corepack package manager', async () =
   )
 
   assert.equal(vercelConfig.installCommand, 'corepack pnpm install')
+  assert.equal(vercelConfig.buildCommand, 'corepack pnpm build')
 })
