@@ -7,12 +7,16 @@
 import { parsePageId } from 'notion-utils'
 import { type PostHogConfig } from 'posthog-js'
 
-import { getEnv, getSiteConfig } from './get-config-value'
+import {
+  getEnv,
+  getRequiredSiteConfig,
+  getSiteConfig
+} from './get-config-value'
 import { type NavigationLink } from './site-config'
 import { type NavigationStyle, type Site } from './types'
 
 export const rootNotionPageId: string = parsePageId(
-  getSiteConfig('rootNotionPageId'),
+  getRequiredSiteConfig('rootNotionPageId'),
   { uuid: false }
 )
 
@@ -30,9 +34,9 @@ export const environment = process.env.NODE_ENV || 'development'
 export const isDev = environment === 'development'
 
 // general site config
-export const name: string = getSiteConfig('name')
-export const author: string = getSiteConfig('author')
-export const domain: string = getSiteConfig('domain')
+export const name: string = getRequiredSiteConfig('name')
+export const author: string = getRequiredSiteConfig('author')
+export const domain: string = getRequiredSiteConfig('domain')
 export const description: string = getSiteConfig('description', 'Notion Blog')
 export const language: string = getSiteConfig('language', 'en')
 
@@ -83,7 +87,7 @@ export const navigationStyle: NavigationStyle = getSiteConfig(
   'default'
 )
 
-export const navigationLinks: Array<NavigationLink | null> = getSiteConfig(
+export const navigationLinks: Array<NavigationLink> | null = getSiteConfig(
   'navigationLinks',
   null
 )

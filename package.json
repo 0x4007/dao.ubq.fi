@@ -30,7 +30,7 @@
     "test": "run-p test:*",
     "test:lint": "eslint .",
     "test:prettier": "prettier '**/*.{js,jsx,ts,tsx}' --check",
-    "test:unit": "node --test test/routing.test.ts"
+    "test:unit": "node --test test/*.test.ts"
   },
   "dependencies": {
     "@keyvhq/core": "^2.0.0",
