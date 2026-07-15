@@ -11,7 +11,7 @@ const publicReactNotionSpecifiers = [
   'react-notion-x/third-party/pdf'
 ]
 
-test('react-notion-x integrations use exported public paths', async () => {
+void test('react-notion-x integrations use exported public paths', async () => {
   const notionPageSource = await readFile(
     new URL('../components/NotionPage.tsx', import.meta.url),
     'utf8'
@@ -30,7 +30,7 @@ test('react-notion-x integrations use exported public paths', async () => {
   }
 })
 
-test('blog classification reaches the JSON-LD script renderer', async () => {
+void test('blog classification reaches the JSON-LD script renderer', async () => {
   const notionPageSource = await readFile(
     new URL('../components/NotionPage.tsx', import.meta.url),
     'utf8'

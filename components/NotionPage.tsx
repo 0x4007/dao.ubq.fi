@@ -12,7 +12,6 @@ import {
   parsePageId
 } from 'notion-utils'
 import * as React from 'react'
-import BodyClassName from 'react-body-classname'
 import {
   type NotionComponents,
   NotionRenderer,
@@ -153,6 +152,20 @@ const propertyTextValue = (
   return defaultFn()
 }
 
+function useBodyClass(className: string, enabled: boolean) {
+  React.useEffect(() => {
+    if (!enabled) {
+      return
+    }
+
+    document.body.classList.add(className)
+
+    return () => {
+      document.body.classList.remove(className)
+    }
+  }, [className, enabled])
+}
+
 export function NotionPage({
   site,
   recordMap,
@@ -185,6 +198,7 @@ export function NotionPage({
 
   // lite mode is for oembed
   const isLiteMode = lite === 'true'
+  useBodyClass('notion-lite', isLiteMode)
 
   const { isDarkMode } = useDarkMode()
 
@@ -283,8 +297,6 @@ export function NotionPage({
         url={canonicalPageUrl}
         isBlogPost={isBlogPost}
       />
-
-      {isLiteMode && <BodyClassName className='notion-lite' />}
 
       <NotionRenderer
         bodyClassName={cs(

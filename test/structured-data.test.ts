@@ -6,7 +6,7 @@ import {
   serializeStructuredData
 } from '../lib/structured-data.ts'
 
-test('collection pages emit organization-authored BlogPosting data', () => {
+void test('collection pages emit organization-authored BlogPosting data', () => {
   const data = getBlogPostStructuredData({
     isBlogPost: true,
     title: 'Protocol update',
@@ -43,7 +43,7 @@ test('collection pages emit organization-authored BlogPosting data', () => {
   })
 })
 
-test('non-blog pages and pages without canonical URLs omit structured data', () => {
+void test('non-blog pages and pages without canonical URLs omit structured data', () => {
   assert.equal(
     getBlogPostStructuredData({
       isBlogPost: false,
@@ -64,7 +64,7 @@ test('non-blog pages and pages without canonical URLs omit structured data', () 
   )
 })
 
-test('structured data serialization cannot close the script element', () => {
+void test('structured data serialization cannot close the script element', () => {
   const payload = {
     title: '</script><script>alert(1)</script>'
   }

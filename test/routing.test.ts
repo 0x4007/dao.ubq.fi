@@ -13,7 +13,7 @@ import { getCanonicalPageUrl, mapPageUrl } from '../lib/map-page-url.ts'
 
 const rootPageId = 'ff1a3cae-9009-41e4-9cc4-d4458cc2867d'
 
-test('site configuration contains no manual route registry', async () => {
+void test('site configuration contains no manual route registry', async () => {
   const source = await readFile(
     new URL('../site.config.ts', import.meta.url),
     'utf8'
@@ -22,7 +22,7 @@ test('site configuration contains no manual route registry', async () => {
   assert.doesNotMatch(source, /pageUrlOverrides|includeNotionIdInUrls/)
 })
 
-test('direct root children get clean title-derived routes', () => {
+void test('direct root children get clean title-derived routes', () => {
   const page = block({
     id: 'fd3d3861-654f-4b7b-9c27-02ff7842ade2',
     type: 'page',
@@ -38,7 +38,7 @@ test('direct root children get clean title-derived routes', () => {
   )
 })
 
-test('search results use their own record map when generating routes', () => {
+void test('search results use their own record map when generating routes', () => {
   const page = block({
     id: '42700dc9-4fcf-4d5f-a829-cac0aa5acd38',
     type: 'page',
@@ -69,7 +69,7 @@ test('search results use their own record map when generating routes', () => {
   )
 })
 
-test('pages below layout blocks retain their Notion ID', () => {
+void test('pages below layout blocks retain their Notion ID', () => {
   const columnList = block({
     id: '11111111-1111-4111-8111-111111111111',
     type: 'column_list',
@@ -95,7 +95,7 @@ test('pages below layout blocks retain their Notion ID', () => {
   )
 })
 
-test('deeper pages retain their Notion ID', () => {
+void test('deeper pages retain their Notion ID', () => {
   const parentPage = block({
     id: 'fd3d3861-654f-4b7b-9c27-02ff7842ade2',
     type: 'page',
@@ -127,7 +127,7 @@ test('deeper pages retain their Notion ID', () => {
   )
 })
 
-test('collection pages and incomplete ancestry default to ID-bearing routes', () => {
+void test('collection pages and incomplete ancestry default to ID-bearing routes', () => {
   const collectionPage = block({
     id: '55555555-5555-4555-8555-555555555555',
     type: 'page',
@@ -153,14 +153,14 @@ test('collection pages and incomplete ancestry default to ID-bearing routes', ()
   )
 })
 
-test('invalid page identifiers do not generate a route', () => {
+void test('invalid page identifiers do not generate a route', () => {
   assert.equal(
     getCanonicalPageId('not-a-notion-page', createRecordMap(), rootPageId),
     null
   )
 })
 
-test('invalid internal page URLs resolve to the 404 route', () => {
+void test('invalid internal page URLs resolve to the 404 route', () => {
   const site = {
     name: 'Ubiquity DAO Hub',
     domain: 'dao.ubq.fi',
@@ -179,7 +179,7 @@ test('invalid internal page URLs resolve to the 404 route', () => {
   )
 })
 
-test('clean slug resolution fetches the complete Notion page', async () => {
+void test('clean slug resolution fetches the complete Notion page', async () => {
   const source = await readFile(
     new URL('../lib/resolve-notion-page.ts', import.meta.url),
     'utf8'
@@ -189,7 +189,7 @@ test('clean slug resolution fetches the complete Notion page', async () => {
   assert.match(source, /recordMap\s*=\s*await getPage\(pageId\)/)
 })
 
-test('collection query page IDs are deduplicated across result shapes', () => {
+void test('collection query page IDs are deduplicated across result shapes', () => {
   const nestedPageId = '99999999-9999-4999-8999-999999999999'
   const collectionPageId = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa'
   const recordMap = createRecordMap()
