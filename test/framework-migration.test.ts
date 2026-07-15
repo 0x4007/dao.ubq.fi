@@ -31,3 +31,11 @@ void test('React 19 migration has no React 18-only body side effect dependency',
   assert.doesNotMatch(notionPageSource, /react-body-classname/)
   assert.match(notionPageSource, /useBodyClass\('notion-lite', isLiteMode\)/)
 })
+
+void test('Vercel installs with the pinned Corepack package manager', async () => {
+  const vercelConfig = JSON.parse(
+    await readFile(new URL('../vercel.json', import.meta.url), 'utf8')
+  )
+
+  assert.equal(vercelConfig.installCommand, 'corepack pnpm install')
+})

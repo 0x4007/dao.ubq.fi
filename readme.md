@@ -40,7 +40,7 @@ It uses Notion as a CMS, [react-notion-x](https://github.com/NotionX/react-notio
 
 **All config is defined in [site.config.ts](./site.config.ts).**
 
-This project requires Node.js >= 22.18 and pnpm 9.12.2.
+This project requires Node.js >= 22.18 and pnpm 10.34.5.
 
 1. Fork / clone this repo
 2. Change a few values in [site.config.ts](./site.config.ts)
