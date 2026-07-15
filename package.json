@@ -7,7 +7,7 @@
   "repository": "transitive-bullshit/nextjs-notion-starter-kit",
   "license": "MIT",
   "engines": {
-    "node": ">=22"
+    "node": ">=22.18.0"
   },
   "packageManager": "pnpm@9.12.2",
   "type": "module",
@@ -29,7 +29,8 @@
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
     "test": "run-p test:*",
     "test:lint": "eslint .",
-    "test:prettier": "prettier '**/*.{js,jsx,ts,tsx}' --check"
+    "test:prettier": "prettier '**/*.{js,jsx,ts,tsx}' --check",
+    "test:unit": "node --test test/routing.test.ts"
   },
   "dependencies": {
     "@keyvhq/core": "^2.0.0",

@@ -40,15 +40,13 @@ It uses Notion as a CMS, [react-notion-x](https://github.com/NotionX/react-notio
 
 **All config is defined in [site.config.ts](./site.config.ts).**
 
-This project requires a recent version of Node.js (we recommend >= 16).
-
-This project requires a recent version of Node.js (>= 14.17).
+This project requires Node.js >= 22.18 and pnpm 9.12.2.
 
 1. Fork / clone this repo
 2. Change a few values in [site.config.ts](./site.config.ts)
-3. `npm install`
-4. `npm run dev` to test locally
-5. `npm run deploy` to deploy to vercel 💪
+3. `pnpm install`
+4. `pnpm dev` to test locally
+5. `pnpm deploy` to deploy to Vercel 💪
 6. Double check your [Vercel project settings](#vercel-configuration)
 
 I tried to make configuration as easy as possible — All you really need to do to get started is edit `rootNotionPageId`.
@@ -73,17 +71,15 @@ From your Vercel project settings, you'll want to **disable Vercel Authenticatio
 
 ## URL Paths
 
-The app defaults to slightly different URL paths in dev vs prod (though pasting any dev pathname into prod will work and vice-versa).
+URL paths are derived automatically from the Notion page tree. Direct children of the configured root page use clean title-derived paths such as `/ubiquityos-for-daos`. Deeper pages use a title followed by their Notion ID, such as `/devpool-flow-c5d49cb088cc4b5fbda15b43682f2974`.
 
-In development, it will use `/nextjs-notion-blog-d1b5dcf8b9ff425b8aef5ce6f0730202` which is a slugified version of the page's title suffixed with its Notion ID. I've found that it's really useful to always have the Notion Page ID front and center during local development.
+The ID on deeper routes lets the app resolve those pages directly without crawling the entire Notion workspace. This keeps deploys within Notion's rate limits while root navigation stays clean and readable.
 
-In production, it will use `/nextjs-notion-blog` which is a bit nicer as it gets rid of the extra ID clutter.
-
-The mapping of Notion ID to slugified page titles is done automatically as part of the build process. Just keep in mind that if you plan on changing page titles over time, you probably want to make sure old links will still work, and we don't currently provide a solution for detecting old links aside from Next.js's built-in [support for redirects](https://nextjs.org/docs/api-reference/next.config.js/redirects).
+Changing the title of a direct root child changes its clean URL. Deeper links remain resolvable after a title change because their Notion ID is stable. Keeping historical clean aliases would require a durable route index; this project deliberately does not maintain a hardcoded alias table.
 
 See [mapPageUrl](./lib/map-page-url.ts) and [getCanonicalPageId](https://github.com/NotionX/react-notion-x/blob/master/packages/notion-utils/src/get-canonical-page-id.ts) for more details.
 
-You can override the default slug generation on a per-page basis by adding a `Slug` text property to your database. Any page which has a `Slug` property will use that as its slug.
+Notion database entries can control the readable part of their route with a `Slug` text property. Standalone root children use their page title because Notion does not expose arbitrary properties on those pages.
 
 NOTE: if you have multiple pages in your workspace with the same slugified name, the app will throw an error letting you know that there are duplicate URL pathnames.
 

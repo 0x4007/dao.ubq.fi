@@ -29,10 +29,6 @@ export interface SiteConfig {
   isRedisEnabled?: boolean
   isSearchEnabled?: boolean
 
-  includeNotionIdInUrls?: boolean
-  pageUrlOverrides?: types.PageUrlOverridesMap
-  pageUrlAdditions?: types.PageUrlOverridesMap
-
   navigationStyle?: types.NavigationStyle
   navigationLinks?: Array<NavigationLink>
 }

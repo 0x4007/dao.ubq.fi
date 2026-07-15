@@ -1,6 +1,7 @@
 import { getBlockValue, getPageTitle, parsePageId } from 'notion-utils'
 
 import * as config from './config'
+import { mapPageUrl } from './map-page-url'
 import { getPage } from './notion'
 
 export const oembed = async ({
@@ -39,7 +40,12 @@ export const oembed = async ({
   }
 
   const query = new URLSearchParams(params).toString()
-  const embedUrl = `${config.host}/${pageId}?${query}`
+  const embedPath = mapPageUrl(
+    config.site,
+    page,
+    new URLSearchParams(query)
+  )(pageId)
+  const embedUrl = `${config.host}${embedPath}`
   const defaultWidth = 800
   const defaultHeight = 600
   const width = maxWidth ? Math.min(maxWidth, defaultWidth) : defaultWidth

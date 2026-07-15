@@ -10,7 +10,7 @@ import {
 import RSS from 'rss'
 
 import * as config from '@/lib/config'
-import { getSiteMap } from '@/lib/get-site-map'
+import { getFeedPageMap } from '@/lib/get-feed-page-map'
 import { getSocialImageUrl } from '@/lib/get-social-image-url'
 import { getCanonicalPageUrl } from '@/lib/map-page-url'
 
@@ -23,25 +23,25 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     return { props: {} }
   }
 
-  const siteMap = await getSiteMap()
+  const pageMap = await getFeedPageMap()
   const ttlMinutes = 24 * 60 // 24 hours
   const ttlSeconds = ttlMinutes * 60
 
   const feed = new RSS({
     title: config.name,
     site_url: config.host,
-    feed_url: `${config.host}/feed.xml`,
+    feed_url: `${config.host}/feed`,
     language: config.language,
     ttl: ttlMinutes
   })
 
-  for (const pagePath of Object.keys(siteMap.canonicalPageMap)) {
-    const pageId = siteMap.canonicalPageMap[pagePath]
-    const recordMap = siteMap.pageMap[pageId] as ExtendedRecordMap
+  for (const [pageId, recordMapValue] of Object.entries(pageMap)) {
+    const recordMap = recordMapValue as ExtendedRecordMap
     if (!recordMap) continue
 
-    const keys = Object.keys(recordMap?.block || {})
-    const block = getBlockValue(recordMap?.block?.[keys[0]])
+    const block = getBlockValue(
+      recordMap.block[pageId] || recordMap.block[idToUuid(pageId)]
+    )
     if (!block) continue
 
     const parentPage = getBlockParentPage(block, recordMap)
@@ -49,7 +49,10 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
       block.type === 'page' &&
       block.parent_table === 'collection' &&
       parentPage?.id === idToUuid(config.rootNotionPageId)
-    if (!isBlogPost) {
+    const isPublic =
+      getPageProperty<boolean | null>('Public', block, recordMap) ?? true
+
+    if (!isBlogPost || !isPublic) {
       continue
     }
 
@@ -89,7 +92,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
   res.setHeader(
     'Cache-Control',
-    `public, max-age=${ttlSeconds}, stale-while-revalidate=${ttlSeconds}`
+    `public, max-age=0, s-maxage=${ttlSeconds}, stale-while-revalidate=${ttlSeconds}`
   )
   res.setHeader('Content-Type', 'text/xml; charset=utf-8')
   res.write(feedText)
