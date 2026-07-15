@@ -10,6 +10,7 @@
     "esModuleInterop": true,
     "module": "esnext",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "moduleDetection": "force",
     "resolveJsonModule": true,
     "isolatedModules": true,

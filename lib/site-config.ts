@@ -12,6 +12,8 @@ export interface SiteConfig {
 
   twitter?: string
   github?: string
+  discord?: string
+  telegram?: string
   linkedin?: string
   newsletter?: string
   youtube?: string
@@ -26,10 +28,6 @@ export interface SiteConfig {
   isTweetEmbedSupportEnabled?: boolean
   isRedisEnabled?: boolean
   isSearchEnabled?: boolean
-
-  includeNotionIdInUrls?: boolean
-  pageUrlOverrides?: types.PageUrlOverridesMap
-  pageUrlAdditions?: types.PageUrlOverridesMap
 
   navigationStyle?: types.NavigationStyle
   navigationLinks?: Array<NavigationLink>

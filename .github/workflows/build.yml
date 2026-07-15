@@ -8,30 +8,24 @@ on:
 
 jobs:
   test:
-    name: Test Node.js ${{ matrix.node-version }}
+    name: Test Node.js 24
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        node-version:
-          - 18
-          - 22
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v6
         id: pnpm-install
         with:
           version: 9.12.2
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 24
           cache: 'pnpm'
 
       - name: Install dependencies
@@ -41,4 +35,7 @@ jobs:
         run: pnpm test
 
       - name: Build
+        # Vercel builds every push and PR. Keep this as a manual diagnostic so
+        # CI does not duplicate the rate-limited Notion crawl.
+        if: github.event_name == 'workflow_dispatch'
         run: pnpm build

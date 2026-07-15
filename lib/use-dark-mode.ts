@@ -1,26 +1,67 @@
-import useDarkModeImpl from '@fisch0920/use-dark-mode'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+
+const storageKey = 'darkMode'
+const changeEvent = 'uos-dark-mode-change'
+
+function getDarkMode() {
+  if (typeof window === 'undefined') return false
+
+  try {
+    const storedValue = window.localStorage.getItem(storageKey)
+    if (storedValue !== null) return JSON.parse(storedValue) === true
+  } catch {
+    // Fall back to the system preference when storage is unavailable.
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+}
+
+function applyBodyDarkMode(value: boolean) {
+  document.body.classList.toggle('dark-mode', value)
+  document.body.classList.toggle('light-mode', !value)
+}
+
+function applyDarkMode(value: boolean) {
+  applyBodyDarkMode(value)
+
+  try {
+    window.localStorage.setItem(storageKey, JSON.stringify(value))
+  } catch {
+    // The body class still keeps the current page in sync without storage.
+  }
+
+  window.dispatchEvent(new Event(changeEvent))
+}
 
 export function useDarkMode() {
-  // Use null as initial state to prevent hydration mismatch
-  const [mounted, setMounted] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
 
-  // Initialize with false (light mode) but don't apply it until after hydration
-  const darkMode = useDarkModeImpl(false, {
-    classNameDark: 'dark-mode',
-    // Skip the initial state change to prevent hydration mismatch
-    onChange: undefined
-  })
-
-  // After hydration, mark component as mounted
   useEffect(() => {
-    setMounted(true)
+    const syncDarkMode = () => {
+      const value = getDarkMode()
+      applyBodyDarkMode(value)
+      setIsDarkMode(value)
+    }
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+
+    syncDarkMode()
+    window.addEventListener(changeEvent, syncDarkMode)
+    window.addEventListener('storage', syncDarkMode)
+    mediaQuery.addEventListener('change', syncDarkMode)
+
+    return () => {
+      window.removeEventListener(changeEvent, syncDarkMode)
+      window.removeEventListener('storage', syncDarkMode)
+      mediaQuery.removeEventListener('change', syncDarkMode)
+    }
+  }, [])
+
+  const toggleDarkMode = useCallback(() => {
+    applyDarkMode(!getDarkMode())
   }, [])
 
   return {
-    // Only return the actual value after component is mounted
-    // This prevents hydration mismatch between server and client
-    isDarkMode: mounted ? darkMode.value : false,
-    toggleDarkMode: darkMode.toggle
+    isDarkMode,
+    toggleDarkMode
   }
 }

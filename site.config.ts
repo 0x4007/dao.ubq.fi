@@ -18,6 +18,8 @@ export default siteConfig({
   // social usernames (optional)
   twitter: 'UbiquityDAO',
   github: 'ubiquity',
+  discord: 'SjymJ5maJ4',
+  telegram: 'UbiquityDAO',
   // linkedin: 'fisch2',
 
   // default notion icon and cover images for site-wide consistency (optional)
@@ -35,16 +37,6 @@ export default siteConfig({
   // NOTE: if you enable redis, you need to set the `REDIS_HOST` and `REDIS_PASSWORD`
   // environment variables. see the readme for more info
   isRedisEnabled: false,
-
-  // map of notion page IDs to URL paths (optional)
-  // any pages defined here will override their default URL paths
-  // example:
-  // ```
-  // {
-  //   '/devpool': 'fd3d3861654f4b7b9c2702ff7842ade2',
-  // }
-  // ```
-  pageUrlOverrides: null,
 
   // whether to use the default notion navigation style or a custom one with links to
   // important pages. To use `navigationLinks`, set `navigationStyle` to `custom`.

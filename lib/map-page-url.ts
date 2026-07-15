@@ -1,26 +1,30 @@
 import { type ExtendedRecordMap } from 'notion-types'
 import { parsePageId, uuidToId } from 'notion-utils'
 
-import { includeNotionIdInUrls } from './config'
-import { getCanonicalPageId } from './get-canonical-page-id'
-import { type Site } from './types'
-
-// include UUIDs in page URLs during local development but not in production
-// (they're nice for debugging and speed up local dev)
-const uuid = !!includeNotionIdInUrls
+import type { Site } from './types.ts'
+import { getCanonicalPageId } from './get-canonical-page-id.ts'
 
 export const mapPageUrl =
   (site: Site, recordMap: ExtendedRecordMap, searchParams: URLSearchParams) =>
-  (pageId = '') => {
+  (pageId = '', targetRecordMap = recordMap) => {
     const pageUuid = parsePageId(pageId, { uuid: true })
+    if (!pageUuid) {
+      return createUrl('/404', searchParams)
+    }
 
-    if (uuidToId(pageUuid) === site.rootNotionPageId) {
+    if (uuidToId(pageUuid) === uuidToId(site.rootNotionPageId)) {
       return createUrl('/', searchParams)
     } else {
-      return createUrl(
-        `/${getCanonicalPageId(pageUuid, recordMap, { uuid })}`,
-        searchParams
+      const canonicalPageId = getCanonicalPageId(
+        pageUuid,
+        targetRecordMap,
+        site.rootNotionPageId
       )
+      if (!canonicalPageId) {
+        return createUrl('/404', searchParams)
+      }
+
+      return createUrl(`/${canonicalPageId}`, searchParams)
     }
   }
 
@@ -28,13 +32,21 @@ export const getCanonicalPageUrl =
   (site: Site, recordMap: ExtendedRecordMap) =>
   (pageId = '') => {
     const pageUuid = parsePageId(pageId, { uuid: true })
+    if (!pageUuid) {
+      return `https://${site.domain}/404`
+    }
 
-    if (uuidToId(pageId) === site.rootNotionPageId) {
+    if (uuidToId(pageUuid) === uuidToId(site.rootNotionPageId)) {
       return `https://${site.domain}`
     } else {
-      return `https://${site.domain}/${getCanonicalPageId(pageUuid, recordMap, {
-        uuid
-      })}`
+      const canonicalPageId = getCanonicalPageId(
+        pageUuid,
+        recordMap,
+        site.rootNotionPageId
+      )
+      return canonicalPageId
+        ? `https://${site.domain}/${canonicalPageId}`
+        : `https://${site.domain}/404`
     }
   }
 

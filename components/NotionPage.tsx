@@ -7,6 +7,7 @@ import { type PageBlock } from 'notion-types'
 import {
   formatDate,
   getBlockTitle,
+  getBlockValue,
   getPageProperty,
   parsePageId
 } from 'notion-utils'
@@ -18,7 +19,6 @@ import {
   useNotionContext
 } from 'react-notion-x'
 import { EmbeddedTweet, TweetNotFound, TweetSkeleton } from 'react-tweet'
-import { useSearchParam } from 'react-use'
 
 import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
@@ -162,7 +162,10 @@ export function NotionPage({
   pageId
 }: types.PageProps) {
   const router = useRouter()
-  const lite = useSearchParam('lite')
+  const lite =
+    router.isReady && typeof router.query.lite === 'string'
+      ? router.query.lite
+      : null
 
   const components = React.useMemo<Partial<NotionComponents>>(
     () => ({
@@ -196,7 +199,7 @@ export function NotionPage({
   }, [site, recordMap, lite])
 
   const keys = Object.keys(recordMap?.block || {})
-  const block = recordMap?.block?.[keys[0]]?.value
+  const block = getBlockValue(recordMap?.block?.[keys[0]])
 
   const isRootPage =
     parsePageId(block?.id) === parsePageId(site?.rootNotionPageId)
@@ -217,14 +220,6 @@ export function NotionPage({
   }
 
   const title = getBlockTitle(block, recordMap) || site.name
-
-  console.log('notion page', {
-    isDev: config.isDev,
-    title,
-    pageId,
-    rootNotionPageId: site.rootNotionPageId,
-    recordMap
-  })
 
   if (!config.isServer) {
     // add important objects to the window global for easy debugging
@@ -291,7 +286,6 @@ export function NotionPage({
       />
 
       {isLiteMode && <BodyClassName className='notion-lite' />}
-      {isDarkMode && <BodyClassName className='dark-mode' />}
 
       <NotionRenderer
         bodyClassName={cs(
