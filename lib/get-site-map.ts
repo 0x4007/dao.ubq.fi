@@ -1,4 +1,10 @@
-import { getAllPagesInSpace, getPageProperty, uuidToId } from 'notion-utils'
+import ExpiryMap from 'expiry-map'
+import {
+  getAllPagesInSpace,
+  getBlockValue,
+  getPageProperty,
+  uuidToId
+} from 'notion-utils'
 import pMemoize from 'p-memoize'
 
 import type * as types from './types'
@@ -12,7 +18,7 @@ const uuid = !!includeNotionIdInUrls
 export async function getSiteMap(): Promise<types.SiteMap> {
   const partialSiteMap = await getAllPages(
     config.rootNotionPageId,
-    config.rootNotionSpaceId
+    config.rootNotionSpaceId ?? undefined
   )
 
   return {
@@ -22,32 +28,51 @@ export async function getSiteMap(): Promise<types.SiteMap> {
 }
 
 const getAllPages = pMemoize(getAllPagesImpl, {
-  cacheKey: (...args) => JSON.stringify(args)
+  cacheKey: (...args) => JSON.stringify(args),
+  cache: new ExpiryMap(60_000)
 })
 
-const getPage = async (pageId: string, ...args) => {
-  console.log('\nnotion getPage', uuidToId(pageId))
-  return notion.getPage(pageId, ...args)
-}
+const getPage = async (pageId: string) =>
+  notion.getPage(pageId, {
+    fetchCollections: false,
+    fetchRelationPages: false,
+    signFileUrls: false,
+    ofetchOptions: {
+      timeout: 30_000
+    }
+  })
 
 async function getAllPagesImpl(
   rootNotionPageId: string,
-  rootNotionSpaceId: string
+  rootNotionSpaceId?: string
 ): Promise<Partial<types.SiteMap>> {
   const pageMap = await getAllPagesInSpace(
     rootNotionPageId,
     rootNotionSpaceId,
-    getPage
+    getPage,
+    {
+      concurrency: 2,
+      maxDepth: 1,
+      traverseCollections: false
+    }
   )
 
   const canonicalPageMap = Object.keys(pageMap).reduce(
     (map, pageId: string) => {
+      if (uuidToId(pageId) === uuidToId(rootNotionPageId)) {
+        return map
+      }
+
       const recordMap = pageMap[pageId]
       if (!recordMap) {
         throw new Error(`Error loading page "${pageId}"`)
       }
 
-      const block = recordMap.block[pageId]?.value
+      const block = getBlockValue(recordMap.block[pageId])
+      if (!block) {
+        throw new Error(`Invalid Notion page "${pageId}"`)
+      }
+
       if (
         !(getPageProperty<boolean | null>('Public', block, recordMap) ?? true)
       ) {
@@ -57,6 +82,9 @@ async function getAllPagesImpl(
       const canonicalPageId = getCanonicalPageId(pageId, recordMap, {
         uuid
       })
+      if (!canonicalPageId) {
+        throw new Error(`Unable to create a route for Notion page "${pageId}"`)
+      }
 
       if (map[canonicalPageId]) {
         // you can have multiple pages in different collections that have the same id

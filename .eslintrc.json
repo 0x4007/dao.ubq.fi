@@ -1,5 +1,6 @@
 {
   "root": true,
+  "ignorePatterns": ["next-env.d.ts"],
   "extends": ["@fisch0920/eslint-config"],
   "rules": {
     "react/prop-types": "off",

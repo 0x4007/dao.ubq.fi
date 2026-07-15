@@ -18,6 +18,8 @@ export default siteConfig({
   // social usernames (optional)
   twitter: 'UbiquityDAO',
   github: 'ubiquity',
+  discord: 'SjymJ5maJ4',
+  telegram: 'UbiquityDAO',
   // linkedin: 'fisch2',
 
   // default notion icon and cover images for site-wide consistency (optional)
@@ -36,6 +38,10 @@ export default siteConfig({
   // environment variables. see the readme for more info
   isRedisEnabled: false,
 
+  // Keep the public top-level routes stable. Deeper Notion links retain their
+  // page IDs so they can be resolved directly without crawling the workspace.
+  includeNotionIdInUrls: true,
+
   // map of notion page IDs to URL paths (optional)
   // any pages defined here will override their default URL paths
   // example:
@@ -44,7 +50,15 @@ export default siteConfig({
   //   '/devpool': 'fd3d3861654f4b7b9c2702ff7842ade2',
   // }
   // ```
-  pageUrlOverrides: null,
+  pageUrlOverrides: {
+    '/ubiquityos-for-daos': 'fd3d3861654f4b7b9c2702ff7842ade2',
+    '/ubiquityos-for-devs': 'd927fb0811324f93ae3935c305176cf5',
+    '/dollar-v2': '721d0d0c488e4ccfb5b6cdd303dc8855',
+    '/dollar-v1': '86dfe71ddea84699a9e4a6db5d5c4ded',
+    '/about': '42700dc94fcf4d5fa829cac0aa5acd38',
+    '/announcements': '596a3e9d82e94c02a4973b54f94d3278',
+    '/articles': '4b37e37d65cc424b851ca47da537c91a'
+  },
 
   // whether to use the default notion navigation style or a custom one with links to
   // important pages. To use `navigationLinks`, set `navigationStyle` to `custom`.

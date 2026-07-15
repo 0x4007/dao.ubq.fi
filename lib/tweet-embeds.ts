@@ -1,4 +1,5 @@
 import type { ExtendedRecordMap } from 'notion-types'
+import { getBlockValue } from 'notion-utils'
 import pMap from 'p-map'
 import { getTweet } from 'react-tweet/api'
 
@@ -6,7 +7,7 @@ export async function getTweetAstMap(recordMap: ExtendedRecordMap) {
   const blockIds = Object.keys(recordMap.block)
   const tweetIds: string[] = blockIds
     .map((blockId) => {
-      const block = recordMap.block[blockId]?.value
+      const block = getBlockValue(recordMap.block[blockId])
 
       if (block) {
         if (block.type === 'tweet') {

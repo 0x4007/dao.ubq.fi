@@ -52,11 +52,10 @@ export async function resolveNotionPage(domain: string, rawPageId?: string) {
       pageId = siteMap?.canonicalPageMap[rawPageId]
 
       if (pageId) {
-        // TODO: we're not re-using the page recordMap from siteMaps because it is
-        // cached aggressively
-        // recordMap = siteMap.pageMap[pageId]
-
-        recordMap = await getPage(pageId)
+        recordMap = siteMap.pageMap[pageId]
+        if (!recordMap) {
+          throw new Error(`Missing Notion record map for "${pageId}"`)
+        }
 
         if (useUriToPageIdCache) {
           try {
@@ -81,8 +80,6 @@ export async function resolveNotionPage(domain: string, rawPageId?: string) {
     }
   } else {
     pageId = site.rootNotionPageId
-
-    console.log(site)
     recordMap = await getPage(pageId)
   }
 

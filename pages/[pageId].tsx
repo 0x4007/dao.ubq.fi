@@ -14,6 +14,10 @@ export const getStaticProps: GetStaticProps<PageProps, Params> = async (
   try {
     const props = await resolveNotionPage(domain, rawPageId)
 
+    if (props.error?.statusCode === 404) {
+      return { notFound: true, revalidate: 10 }
+    }
+
     return { props, revalidate: 10 }
   } catch (err) {
     console.error('page error', domain, rawPageId, err)
@@ -34,18 +38,15 @@ export async function getStaticPaths() {
 
   const siteMap = await getSiteMap()
 
-  const staticPaths = {
+  return {
     paths: Object.keys(siteMap.canonicalPageMap).map((pageId) => ({
       params: {
         pageId
       }
     })),
     // paths: [],
-    fallback: true
+    fallback: 'blocking'
   }
-
-  console.log(staticPaths.paths)
-  return staticPaths
 }
 
 export default function NotionDomainDynamicPage(props) {
