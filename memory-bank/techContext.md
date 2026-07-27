@@ -16,7 +16,6 @@
 ### Infrastructure
 - **Vercel**: Hosting platform optimized for Next.js
 - **GitHub**: Version control and CI/CD integration
-- **Redis** (optional): For caching preview images
 
 ### Development Tools
 - **pnpm**: Package manager
@@ -37,10 +36,6 @@ The application uses several environment variables for configuration:
 - **NEXT_PUBLIC_FATHOM_ID** (optional): For Fathom analytics
 - **NEXT_PUBLIC_POSTHOG_ID** (optional): For PostHog analytics
 - **TWITTER_ACCESS_TOKEN** (optional): For rendering tweets
-- **REDIS_HOST** (optional): For Redis caching
-- **REDIS_PASSWORD** (optional): For Redis authentication
-- **REDIS_USER** (optional): For Redis user
-- **REDIS_NAMESPACE** (optional): For Redis namespace
 
 ### Local Development
 1. Clone the repository

@@ -48,6 +48,26 @@ void test('framework dependencies stay on audited security patches', async () =>
   assert.match(workspaceConfig, /sharp: 0\.35\.3/)
 })
 
+void test('page runtime excludes the removed preview image and Redis stack', async () => {
+  const sources = await Promise.all(
+    [
+      '../package.json',
+      '../lib/notion.ts',
+      '../lib/config.ts',
+      '../lib/site-config.ts',
+      '../lib/get-tweets.ts',
+      '../site.config.ts',
+      '../components/NotionPage.tsx',
+      '../.env.example'
+    ].map((path) => readFile(new URL(path, import.meta.url), 'utf8'))
+  )
+
+  assert.doesNotMatch(
+    sources.join('\n'),
+    /lqip-modern|preview_images|isPreviewImageSupportEnabled|isRedisEnabled|REDIS_|@keyvhq/
+  )
+})
+
 void test('Vercel installs with the pinned Corepack package manager', async () => {
   const vercelConfig = JSON.parse(
     await readFile(new URL('../vercel.json', import.meta.url), 'utf8')

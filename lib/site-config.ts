@@ -24,9 +24,7 @@ export interface SiteConfig {
   defaultPageCover?: string | null
   defaultPageCoverPosition?: number | null
 
-  isPreviewImageSupportEnabled?: boolean
   isTweetEmbedSupportEnabled?: boolean
-  isRedisEnabled?: boolean
   isSearchEnabled?: boolean
 
   navigationStyle?: types.NavigationStyle

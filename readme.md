@@ -83,31 +83,6 @@ Notion database entries can control the readable part of their route with a `Slu
 
 NOTE: if you have multiple pages in your workspace with the same slugified name, the app will throw an error letting you know that there are duplicate URL pathnames.
 
-## Preview Images
-
-<p align="center">
-  <img alt="Example preview image" src="https://user-images.githubusercontent.com/552829/160142320-35343317-aa9e-4710-bcf7-67e5cdec586d.gif" width="458">
-</p>
-
-We use [next/image](https://nextjs.org/docs/api-reference/next/image) to serve images efficiently, with preview images optionally generated via [lqip-modern](https://github.com/transitive-bullshit/lqip-modern). This gives us extremely optimized image support for sexy smooth images.
-
-Preview images are **enabled by default**, but they can be slow to generate, so if you want to disable them, set `isPreviewImageSupportEnabled` to `false` in `site.config.ts`.
-
-### Redis
-
-If you want to cache generated preview images to speed up subsequent builds, you'll need to first set up an external [Redis](https://redis.io) data store. To enable redis caching, set `isRedisEnabled` to `true` in `site.config.ts` and then set `REDIS_HOST` and `REDIS_PASSWORD` environment variables to point to your redis instance.
-
-You can do this locally by adding a `.env` file:
-
-```bash
-REDIS_HOST='TODO'
-REDIS_PASSWORD='TODO'
-```
-
-If you're not sure which Redis provider to use, we recommend [Redis Labs](https://redis.com), which provides a free plan.
-
-Note that preview images and redis caching are both optional features. If you’d rather not deal with them, just disable them in your site config.
-
 ## Styles
 
 All CSS styles that customize Notion content are located in [styles/notion.css](./styles/notion.css). They mainly target global CSS classes exported by react-notion-x [styles.css](https://github.com/NotionX/react-notion-x/blob/master/packages/react-notion-x/src/styles.css).
@@ -180,9 +155,7 @@ To enable, just add a `NEXT_PUBLIC_POSTHOG_ID` environment variable, which will 
 
 ## Environment Variables
 
-If you're using Redis, analytics, or any other feature which requires environment variables, then you'll need to [add them to your Vercel project](https://vercel.com/docs/concepts/projects/environment-variables).
-
-If you want to test your redis builds with GitHub Actions, then you'll need to edit the [default build action](./.github/workflows/build.yml) to add `REDIS_HOST` and `REDIS_PASSWORD`. Here is an [example from my personal branch](https://github.com/transitive-bullshit/nextjs-notion-starter-kit/blob/transitive-bullshit/.github/workflows/build.yml#L17-L21). You'll also need to add these environment variables to your GitHub repo as [repository secrets](https://docs.github.com/en/actions/security-guides/encrypted-secrets).
+If you're using analytics or any other feature which requires environment variables, then you'll need to [add them to your Vercel project](https://vercel.com/docs/concepts/projects/environment-variables).
 
 ## Contributing
 
