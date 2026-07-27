@@ -2,18 +2,24 @@ import Head from 'next/head'
 
 import type * as types from '@/lib/types'
 import * as config from '@/lib/config'
+import {
+  getBlogPostStructuredData,
+  serializeStructuredData
+} from '@/lib/structured-data'
 
 export function PageHead({
   site,
   title,
   description,
   image,
-  url
+  url,
+  isBlogPost
 }: types.PageProps & {
   title?: string
   description?: string
   image?: string
   url?: string
+  isBlogPost?: boolean
 }) {
   const rssFeedUrl = `${config.host}/feed`
 
@@ -21,6 +27,15 @@ export function PageHead({
   description = description ?? site?.description
 
   const socialImageUrl = image // getSocialImageUrl(pageId) || image
+  const structuredData = getBlogPostStructuredData({
+    isBlogPost,
+    title,
+    description,
+    image: socialImageUrl,
+    url,
+    organizationName: config.author,
+    organizationUrl: site ? `https://${site.domain}` : undefined
+  })
 
   return (
     <Head>
@@ -98,6 +113,15 @@ export function PageHead({
       <meta property='og:title' content={title} />
       <meta name='twitter:title' content={title} />
       <title>{title}</title>
+
+      {structuredData && (
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{
+            __html: serializeStructuredData(structuredData)
+          }}
+        />
+      )}
     </Head>
   )
 }

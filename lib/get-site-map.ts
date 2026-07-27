@@ -74,9 +74,9 @@ async function getAllPagesImpl(
         return map
       }
 
-      if (
-        !(getPageProperty<boolean | null>('Public', block, recordMap) ?? true)
-      ) {
+      if (!(
+        getPageProperty<boolean | null>('Public', block, recordMap) ?? true
+      )) {
         return map
       }
 

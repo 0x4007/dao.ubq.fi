@@ -1,0 +1,14 @@
+overrides:
+  '@babel/runtime': 7.29.7
+  postcss: 8.5.23
+  sharp: 0.35.3
+  swr: 2.4.2
+  use-sync-external-store: 1.6.0
+
+allowBuilds:
+  core-js: false
+  sharp: true
+
+minimumReleaseAge: 1440
+
+packageManagerStrictVersion: true
