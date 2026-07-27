@@ -37,7 +37,6 @@ export interface Site {
   html?: string
   fontFamily?: string
   darkMode?: boolean
-  previewImages?: boolean
 
   // opengraph metadata
   description?: string

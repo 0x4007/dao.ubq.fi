@@ -30,14 +30,11 @@
     "test:unit": "node --test test/*.test.ts"
   },
   "dependencies": {
-    "@keyvhq/core": "^2.0.0",
-    "@keyvhq/redis": "^2.0.0",
     "classnames": "^2.5.1",
     "expiry-map": "^2.0.0",
     "fathom-client": "^3.4.1",
     "katex": "^0.16.28",
     "ky": "^1.14.3",
-    "lqip-modern": "^2.2.1",
     "next": "^16.2.12",
     "notion-client": "^7.10.0",
     "notion-types": "^7.10.0",

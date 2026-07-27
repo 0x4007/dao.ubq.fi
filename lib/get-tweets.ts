@@ -5,7 +5,6 @@ import pMemoize from 'p-memoize'
 import { getTweet as getTweetData } from 'react-tweet/api'
 
 import type { ExtendedTweetRecordMap } from './types'
-import { db } from './db'
 
 export async function getTweetsMap(
   recordMap: ExtendedRecordMap
@@ -30,29 +29,8 @@ export async function getTweetsMap(
 async function getTweetImpl(tweetId: string): Promise<any> {
   if (!tweetId) return null
 
-  const cacheKey = `tweet:${tweetId}`
-
   try {
-    try {
-      const cachedTweet = await db.get(cacheKey)
-      if (cachedTweet || cachedTweet === null) {
-        return cachedTweet
-      }
-    } catch (err) {
-      // ignore redis errors
-      console.warn(`redis error get "${cacheKey}"`, err.message)
-    }
-
-    const tweetData = (await getTweetData(tweetId)) || null
-
-    try {
-      await db.set(cacheKey, tweetData)
-    } catch (err) {
-      // ignore redis errors
-      console.warn(`redis error set "${cacheKey}"`, err.message)
-    }
-
-    return tweetData
+    return (await getTweetData(tweetId)) || null
   } catch (err: any) {
     console.warn('failed to get tweet', tweetId, err.message)
     return null

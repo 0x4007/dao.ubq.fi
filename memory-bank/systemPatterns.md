@@ -78,7 +78,6 @@ The application uses CSS Modules for styling, which provides:
 1. **Image Optimization**: Using Next.js Image component for optimized image loading
 2. **Code Splitting**: Automatic code splitting to reduce initial load time
 3. **Caching Strategy**: Leveraging Vercel's edge caching
-4. **Preview Images**: Optional LQIP (Low Quality Image Placeholders) for faster perceived loading
 
 ## Security Patterns
 1. **Content Security**: Notion content is sanitized before rendering
