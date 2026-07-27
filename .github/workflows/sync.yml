@@ -37,4 +37,5 @@ jobs:
           test_mode: ${{ github.event_name == 'workflow_dispatch' && inputs.sync_test_mode || false }}
 
       - name: Report sync result
-        run: echo "Upstream changes found: ${{ steps.sync.outputs.has_new_commits }}"
+        run: |
+          echo "Upstream changes found: ${{ steps.sync.outputs.has_new_commits }}"
