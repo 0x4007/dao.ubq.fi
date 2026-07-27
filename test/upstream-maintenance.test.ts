@@ -30,6 +30,16 @@ void test('react-notion-x integrations use exported public paths', async () => {
   }
 })
 
+void test('site configuration has one checked-in source of truth', async () => {
+  const configSource = await readFile(
+    new URL('../lib/get-config-value.ts', import.meta.url),
+    'utf8'
+  )
+
+  assert.doesNotMatch(configSource, /NEXT_PUBLIC_SITE_CONFIG/)
+  assert.match(configSource, /const siteConfig: SiteConfig = rawSiteConfig/)
+})
+
 void test('blog classification reaches the JSON-LD script renderer', async () => {
   const notionPageSource = await readFile(
     new URL('../components/NotionPage.tsx', import.meta.url),
