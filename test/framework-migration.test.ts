@@ -32,6 +32,22 @@ void test('React 19 migration has no React 18-only body side effect dependency',
   assert.match(notionPageSource, /useBodyClass\('notion-lite', isLiteMode\)/)
 })
 
+void test('framework dependencies stay on audited security patches', async () => {
+  const packageJson = JSON.parse(
+    await readFile(new URL('../package.json', import.meta.url), 'utf8')
+  )
+  const workspaceConfig = await readFile(
+    new URL('../pnpm-workspace.yaml', import.meta.url),
+    'utf8'
+  )
+
+  assert.equal(packageJson.dependencies.next, '^16.2.12')
+  assert.equal(packageJson.dependencies.react, '^19.2.8')
+  assert.equal(packageJson.dependencies['react-dom'], '^19.2.8')
+  assert.match(workspaceConfig, /postcss: 8\.5\.23/)
+  assert.match(workspaceConfig, /sharp: 0\.35\.3/)
+})
+
 void test('Vercel installs with the pinned Corepack package manager', async () => {
   const vercelConfig = JSON.parse(
     await readFile(new URL('../vercel.json', import.meta.url), 'utf8')
